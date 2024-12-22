@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Home Page</title>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+
+    <div class = "container mt-3 row row-cols-3">
+        <% friends.forEach(friend => { %>
+            <div class="col">
+            <div class="card col" style="width: 18rem;">
+                <a class="nav-link " href="/messages/<%= friend.email %>" role="button"  aria-expanded="false">
+                    <img src="<%= friend.profileImageURL %>" alt="Image" style="width: 50px; height: 50px;">
+                  </a>
+                  <p> <%= friend.name %></p>
+                  <% if (friend.isOnline=='true') { %>
+                    <p>online</p>                   
+                  <% } %>
+                
+              </div>
+            </div>
+        <% }) %>
+    </div>
+        
+       
+    
+
+    <%- include('./partials/scripts') %>
+</body>
+</html>

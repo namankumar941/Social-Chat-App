@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Home Page</title>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+    <% if (locals.error) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= locals.error %>
+        </div>     
+      <% } %>
+
+    <div class = "container mt-3 row row-cols-3">
+
+        <form action="/friend/sendRequest" method = "post">
+            
+            <div class="mb-3">
+              <label for="Search By Email" class="form-label"></label>
+              <input 
+              type="email" 
+              placeholder="Search By Email" 
+              required
+              class="form-control" 
+              id="exampleInputEmail1" 
+              name="email"
+              aria-describedby="emailHelp">
+            <button type="submit" class="btn btn-primary">send request</button>
+          </form>
+
+          <% if (locals.friends) { %>
+            <% friends.forEach(friend => { %>
+              <div class="col">
+              <div class="card col" style="width: 18rem;">
+                  <a class="nav-link "  aria-expanded="false">
+                      <img src="<%= friend.profileImageURL %>" alt="Image" style="width: 50px; height: 50px;">
+                      <p> <%= friend.name %></p>
+                  </a>
+                     
+                    
+                    <a class="nav-link " href="/friend/accept/<%= friend.email %>" role="button" aria-expanded="false">
+                      <p>Accept</p>                   
+                    </a>
+                    <a class="nav-link " href="/friend/reject/<%= friend.email %>" role="button" aria-expanded="false">
+                      <p>Reject</p>                   
+                    </a>            
+                </div>
+              </div>
+          <% }) %>
+           
+          <% } %>
+
+        
+    </div>
+
+    <%- include('./partials/scripts') %>
+</body>
+</html>

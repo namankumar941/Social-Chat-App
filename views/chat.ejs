@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Home Page</title>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+    <p><%= to %></p>
+
+    <% if (locals.messages) { %>
+        <% messages.forEach(message => { %>
+          <div class="col" row row-cols-1>
+          <div class="card col" style="width: 18rem;">
+              <a class="nav-link "  aria-expanded="false">
+                  <p><%= message %></p>
+              </a>         
+            </div>
+          </div>
+          <div class="mb" id="chatContainer">
+            <li class="chat-message">
+            <p></p>
+          </li>
+        </div>
+      <% }) %>
+      
+      <% } %>
+      
+      
+      
+
+    <form action="/messages/send/<%= locals.to %>" method = "post" id = "msgForm">
+            
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label"></label>
+          <input 
+          type="text" 
+          class="form-control" 
+          placeholder="message" 
+          required
+          id="exampleInputEmail1" 
+          name="message"
+          aria-describedby="message">        
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+
+    <%- include('./partials/scripts') %>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    const socket = io() 
+    const email = `<%= user.email %>` 
+    const msgTo = `<%= to %>`
+    const msgForm = document.getElementById('msgForm')
+    const msgInput= document.getElementById('exampleInputEmail1')
+    const messageContainer = document.getElementById('chatContainer')
+
+    socket.emit('email',email)
+
+    msgForm.addEventListener('submit',(e)=>{
+      //e.preventDefault()
+      sendMessage()
+    })
+    function sendMessage(){
+      const data = {
+        from : email,
+        to: msgTo,
+        message: msgInput.value
+      }
+      socket.emit('message',data)
+    } 
+    
+    if(`${msgTo}${from}` == `<%= user.chattingTo %>`|| `${from}${msgTo}` == `<%= user.chattingTo %>`){
+      socket.on('chat-message',(data)=>{
+      addMessageToUI(data)
+    })
+    }
+    
+
+    function addMessageToUI(data){
+      const element = `<li class="chat-message">
+        <p>${data}</p>
+      </li>`
+      messageContainer.innerHTML += element
+    }
+    </script> 
+</body>
+</html>
